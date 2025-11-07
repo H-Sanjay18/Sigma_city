@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KD_WIRE: v2.7 // KYRON-DELTA TOURIST FEED</title>
+    <title>KD_WIRE: v2.7 [KYRON-DELTA FEED]</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,6 +11,14 @@
 </head>
 <body>
 
+    <!-- NEW: Page-specific background distortion layers -->
+    <div id="bg-dashboard" class="background-layer" style="background-image: url('main_page.jpg');"></div>
+    <div id="bg-districts" class="background-layer" style="background-image: url('districts.jpg');"></div>
+    <div id="bg-intel" class="background-layer" style="background-image: url('secret_access_panel.jpg');"></div>
+    <div id="bg-access-panel" class="background-layer" style="background-image: url('baddie-cyberpunk-3840x2612-16060.jpg');"></div>
+
+
+    <!-- LAYER 1: The "Official" corporate site that glitches out -->
     <div class="official-layer">
         <div class="official-content">
             <h1>Welcome to Kyron-Delta</h1>
@@ -19,32 +27,43 @@
         </div>
     </div>
 
+    <!-- LAYER 2: The "Hacked" street-level site -->
     <div class="site-wrapper">
         <header class="main-header">
             <div class="logo">
                 <span class="glitch-text">[KD_WIRE: v2.7]</span>
             </div>
             <nav class="main-nav">
-                <a href="#dashboard">[//DASHBOARD]</a>
-                <a href="#districts">[//DISTRICTS]</a>
-                <a href="#intel">[//STREET_INTEL]</a>
-                <a href="#access-panel" class="nav-secret">[//ACCESS_PANEL]</a>
+                <!-- Navigation links for our SPA -->
+                <a href="#" id="nav-dashboard">[DASHBOARD]</a>
+                <a href="#" id="nav-districts">[DISTRICTS]</a>
+                <a href="#" id="nav-intel">[STREET_INTEL]</a>
+                <a href="#" id="nav-access-panel" class="nav-secret">[ACCESS_PANEL]</a>
             </nav>
             <div class="status-bar">
-                <span>[PING: 38ms]</span>
+                <!-- The ping value will be updated by JavaScript -->
+                <span>[PING: <span id="ping-value">...</span>]</span>
                 <span>[USER: GUEST_9a4f2]</span>
                 <span class="status-warning">[GRID: FLUCTUATING]</span>
             </div>
         </header>
 
-        <main>
+        <main id="main-content">
+            <!-- HERO / WARNING SECTION (Always visible) -->
             <section class="hero-warning">
                 <h2>[!] SYSTEM WARNING [!]</h2>
-                <p>You've bypassed the OmniCore firewall. Welcome to <strong>The Wire</strong>, the real feed for Kyron-Delta. The corporate "tourist" net is a lie[cite: 30]. This is your survival guide. Trust no one. Watch your back. And don't get zeroed[cite: 31].</p>
+                <p>You've bypassed the OmniCore firewall. Welcome to <strong>The Wire</strong>, the real feed for Kyron-Delta. The corporate "tourist" net is a lie. This is your survival guide. Trust no one. Watch your back. And don't get zeroed.</p>
             </section>
 
-            <section id="dashboard" class="widget-section">
-                <h3 class="section-title">[// CITY_STATUS: LIVE DATA //]</h3>
+            <!-- 
+              SPA "Pages"
+              JavaScript will show/hide these sections.
+              The Dashboard (page-dashboard) will be shown by default.
+            -->
+
+            <!-- PAGE 1: DATA DASHBOARD -->
+            <section id="page-dashboard" class="widget-section page-section">
+                <h3 class="section-title">[ CITY_STATUS: LIVE DATA ]</h3>
                 <div class="dashboard-grid">
                     <div class="widget">
                         <h4>K-SEC ALERT LEVEL</h4>
@@ -73,8 +92,9 @@
                 </div>
             </section>
 
-            <section id="districts" class="widget-section">
-                <h3 class="section-title">[// THE SECTORS: A USER'S GUIDE //]</h3>
+            <!-- PAGE 2: DISTRICTS -->
+            <section id="page-districts" class="widget-section page-section">
+                <h3 class="section-title">[ THE SECTORS: A USER'S GUIDE ]</h3>
                 <div class="districts-grid">
                     <div class="widget">
                         <h4>THE SPIRE (CORP ZONE)</h4>
@@ -97,11 +117,12 @@
                 </div>
             </section>
 
-            <section id="intel" class="widget-section">
-                <h3 class="section-title">[// STREET INTEL: THE UNWRITTEN RULES //]</h3>
+            <!-- PAGE 3: STREET INTEL -->
+            <section id="page-intel" class="widget-section page-section">
+                <h3 class="section-title">[ STREET INTEL: THE UNWRITTEN RULES ]</h3>
                 <div class="intel-grid">
                     <div class="widget">
-                        <h4>LOCAL LINGO [cite: 31]</h4>
+                        <h4>LOCAL LINGO</h4>
                         <ul>
                             <li><strong>Zeroed:</strong> Killed, erased, flatlined.</li>
                             <li><strong>Choom:</strong> Friend, buddy.</li>
@@ -111,7 +132,7 @@
                         </ul>
                     </div>
                     <div class="widget">
-                        <h4>THE GRIND (FOOD) [cite: 31]</h4>
+                        <h4>THE GRIND (FOOD)</h4>
                         <ul>
                             <li><strong>Takashi's Synth-Ramen:</strong> "Tastes like real food... mostly. Hot, cheap, and in every alley."</li>
                             <li><strong>'Gutter's Grill' Bio-Meat:</strong> "Don't ask what 'bio-meat' it is. Just eat. It's protein."</li>
@@ -119,7 +140,7 @@
                         </ul>
                     </div>
                     <div class="widget">
-                        <h4>HOW NOT TO GET ZEROED [cite: 31]</h4>
+                        <h4>HOW NOT TO GET ZEROED</h4>
                         <ol>
                             <li><strong>Mind your own business.</strong> Staring gets you slotted.</li>
                             <li><strong>Never trust a suit.</strong> All corps want is your data or your organs.</li>
@@ -132,22 +153,44 @@
         </main>
 
         <footer class="main-footer">
-            <p>DISCONNECT? [// YOU CAN'T //]</p>
+            <p>DISCONNECT? [YOU CAN'T]</p>
             <p>OMNICORE GLOBAL IS WATCHING. ALWAYS.</p>
         </footer>
     </div>
 
+    <!-- SECRET ACCESS PANEL (Now controlled by JS) -->
     <div id="access-panel" class="secret-panel">
         <div class="terminal-window">
-            <h3>[// OMNICORE SECURE TERMINAL //]</h3>
-            <p>ACCESS RESTRICTED: LVL 7 CLEARANCE</p>
-            <p>... RUNNING AUTHENTICATION ...</p>
-            <p class="data-critical">[ ACCESS DENIED ]</p>
-            <p class="data-critical">[TRACING USER... 9a4f2]</p>
-            <p>YOU ARE NOT AUTHORIZED. EXIT IMMEDIATELY.</p>
-            <a href="#" class="terminal-close">[X] CLOSE TERMINAL</a>
+            
+            <!-- LOCKED STATE -->
+            <div id="panel-locked">
+                <h3>[ OMNICORE SECURE TERMINAL ]</h3>
+                <p>ACCESS RESTRICTED: LVL 7 CLEARANCE</p>
+                <p>... RUNNING AUTHENTICATION ...</p>
+                <p class="data-critical">[ ACCESS DENIED ]</p>
+                <p class="data-critical">[TRACING USER... 9a4f2]</p>
+                <p>YOU ARE NOT AUTHORIZED. <a href="#" id="panel-bypass" class="secret-trigger">EXIT</a> IMMEDIATELY.</p>
+            </div>
+
+            <!-- UNLOCKED STATE (Hidden by default) -->
+            <div id="panel-unlocked" style="display: none;">
+                <h3 class="data-success">[ SYSTEM BYPASSED ]</h3>
+                <p>... FIREWALL NEUTRALIZED ...</p>
+                <p>... TRACE ROUTINE TERMINATED ...</p>
+                <p>Welcome, <span class="data-high">ADMIN_GUEST_9a4f2</span></p>
+                <p>Loading secure databanks:</p>
+                <p class="data-low">> ACCESSING: [CORP_FINANCIALS_Q4]</p>
+                <p class="data-low">> ACCESSING: [PROJECT_EIDOLON_PROTOTYPES]</p>
+                <p class="data-low">> ACCESSING: [K-SEC_PATROL_ROUTES_LIVE]</p>
+            </div>
+
+            <!-- This button closes the whole panel, regardless of state -->
+            <a href="#" id="panel-close" class="terminal-close">[X] CLOSE TERMINAL</a>
         </div>
     </div>
+
+    <!-- Add the JavaScript file -->
+    <script src="script.js"></script>
 
 </body>
 </html>

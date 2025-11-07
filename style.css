@@ -7,6 +7,7 @@
     --color-warning: #f7ff00; /* Yellow */
     --color-critical: #ff0000; /* Red */
     --color-border: #00ffc3;
+    --color-neon-pink-hover-fill: #ff00ff40; /* Stronger fill for hover */
     --font-heading: 'Orbitron', sans-serif;
     --font-body: 'Share Tech Mono', monospace;
 }
@@ -19,13 +20,34 @@
 }
 
 body {
-    background-color: var(--color-bg);
+    background-color: var(--color-bg); /* The base black background */
     color: var(--color-text);
     font-family: var(--font-body);
     font-size: 16px;
     line-height: 1.7;
     overflow-x: hidden; /* Prevent horizontal scroll */
 }
+
+/* UPDATED: Background distortion layer */
+.background-layer {
+    position: fixed;
+    top: -2.5%; /* Start slightly larger */
+    left: -2.5%; /* Start slightly larger */
+    width: 105%; /* 5% larger to hide edges on move */
+    height: 105%; /* 5% larger to hide edges on move */
+    /* background-image is now set inline in HTML */
+    background-size: cover;
+    background-position: center;
+    opacity: 0; /* Hidden by default */
+    z-index: 0; /* Sit just on top of body bg, behind everything else */
+    /* Updated transitions */
+    transition: opacity 0.5s ease-in-out, transform 0.1s ease-out;
+}
+/* NEW: Active class for background layer */
+.background-layer.active {
+    opacity: 0.4; /* 40% opacity as requested */
+}
+
 
 /* --- SCANLINE & FLICKER OVERLAY --- */
 body::before {
@@ -43,7 +65,7 @@ body::before {
     );
     background-size: 100% 4px; /* Creates thin horizontal lines */
     animation: scanline-flicker 0.3s infinite alternate;
-    z-index: 9999;
+    z-index: 1; /* Sit ON TOP of the background, but BEHIND content */
     pointer-events: none;
     opacity: 0.3;
 }
@@ -68,13 +90,9 @@ body::before {
     align-items: center;
     text-align: center;
     font-family: Arial, sans-serif;
-    /* Animation plays once, then stays on the 'to' state */
     animation: glitch-out 2.5s 1s ease-out forwards;
 }
-.official-layer h1 {
-    font-size: 3rem;
-    color: #333;
-}
+.official-layer h1 { font-size: 3rem; color: #333; }
 .official-layer .loading {
     font-size: 1.2rem;
     color: #555;
@@ -96,9 +114,10 @@ body::before {
     max-width: 1200px;
     margin: 0 auto;
     padding: 1rem;
-    /* Fades in after glitch-out */
     opacity: 0;
     animation: fade-in 1s 3s forwards;
+    position: relative; /* Add position */
+    z-index: 10; /* Sit ON TOP of background and scanlines */
 }
 
 @keyframes fade-in {
@@ -114,14 +133,39 @@ h1, h2, h3, h4 {
     letter-spacing: 2px;
     margin-bottom: 1rem;
 }
+
+/* NEW: Blinking animation for headings */
+@keyframes blink-glow {
+    0%, 100% {
+        text-shadow: 0 0 5px var(--glow-color), 0 0 8px var(--glow-color);
+        opacity: 1;
+    }
+    50% {
+        text-shadow: 0 0 10px var(--glow-color), 0 0 20px var(--glow-color), 0 0 30px var(--glow-color);
+        opacity: 0.85;
+    }
+}
+
+/* Apply blinking animation to key headings */
+.hero-warning h2 {
+    --glow-color: var(--color-critical);
+    animation: blink-glow 1.5s infinite;
+}
 h3.section-title {
+    --glow-color: var(--color-neon-green);
     color: var(--color-neon-green);
-    text-shadow: 0 0 5px var(--color-neon-green);
     border-bottom: 1px solid var(--color-neon-green);
     padding-bottom: 0.5rem;
     margin-bottom: 1.5rem;
-    animation: text-flicker 3s infinite alternate;
+    animation: blink-glow 2s infinite alternate;
 }
+.widget h4 {
+    color: var(--color-text);
+    text-shadow: none;
+    border-bottom: 1px dashed var(--color-border);
+    padding-bottom: 0.5rem;
+}
+
 p { margin-bottom: 1rem; }
 a {
     color: var(--color-text);
@@ -131,9 +175,6 @@ a {
 a:hover {
     color: var(--color-neon-pink);
     text-shadow: 0 0 8px var(--color-neon-pink);
-}
-ul, ol {
-    padding-left: 20px;
 }
 
 /* --- HEADER / NAV / STATUS --- */
@@ -156,21 +197,84 @@ ul, ol {
     margin: 0 0.75rem;
     font-family: var(--font-body);
     font-size: 1rem;
+    cursor: pointer; /* Changed for JS links */
 }
-.nav-secret {
-    color: var(--color-warning);
-}
+.nav-secret { color: var(--color-warning); }
 .nav-secret:hover {
     color: var(--color-critical);
     text-shadow: 0 0 8px var(--color-critical);
 }
-.status-bar {
-    font-size: 0.9rem;
-}
+.status-bar { font-size: 0.9rem; }
 .status-warning {
     color: var(--color-warning);
     animation: text-flicker 1s infinite alternate;
 }
+
+/* --- SPA PAGE STYLES --- */
+/* Hide all pages by default */
+.page-section {
+    display: none;
+}
+/* This class will be added by JS to show a page */
+.page-section.active {
+    display: block;
+    /* UPDATED to use high-distortion glitch */
+    animation: glitch-transition-in 0.6s ease-out;
+}
+
+/* Old fade-in, kept for access panel */
+@keyframes page-fade-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* NEW: High-distortion glitch for page content */
+@keyframes glitch-transition-in {
+    0% {
+        transform: translate(10px, 0) skewX(-20deg);
+        opacity: 0;
+        clip-path: inset(50% 0 30% 0);
+    }
+    20% {
+        transform: translate(0, 0) skewX(0);
+        opacity: 0.8;
+        clip-path: inset(10% 0 5% 0);
+    }
+    40% {
+        transform: translate(-5px, 0) skewX(5deg);
+        opacity: 0.7;
+    }
+    60% {
+        transform: translate(0, 0) skewX(0);
+        opacity: 1;
+        clip-path: inset(0 0 0 0);
+    }
+    80% {
+        transform: translate(2px, 0) skewX(-2deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(0, 0) skewX(0);
+        opacity: 1;
+    }
+}
+
+/* NEW: Screen-wide glitch animation for transitions */
+@keyframes screen-glitch-anim {
+    0% { transform: translate(0,0); opacity: 0.3; }
+    20% { transform: translate(-10px, 5px); opacity: 0.6; background-size: 100% 2px; }
+    40% { transform: translate(10px, -5px); opacity: 0.4; }
+    60% { transform: translate(-5px, 2px); opacity: 0.7; background-size: 100% 6px; }
+    80% { transform: translate(5px, -2px); opacity: 0.5; }
+    100% { transform: translate(0,0); opacity: 0.3; background-size: 100% 4px; }
+}
+
+/* NEW: Class added to body to trigger screen glitch */
+.screen-glitch::before {
+    /* This targets the body::before pseudo-element */
+    animation: screen-glitch-anim 0.4s 1;
+}
+
 
 /* --- WIDGETS (DASHBOARD, DISTRICTS, INTEL) --- */
 .widget-section {
@@ -181,13 +285,19 @@ ul, ol {
     padding: 1.5rem;
     background: #000c09; /* Very dark cyan */
     height: 100%; /* For grid items */
+    position: relative; /* For overflow */
+    overflow: hidden; /* To contain hover effect */
+    /* Add transition for hover effect */
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
-.widget h4 {
-    color: var(--color-text);
-    text-shadow: none;
-    border-bottom: 1px dashed var(--color-border);
-    padding-bottom: 0.5rem;
+
+/* Active hover state for widgets (replaces ripple) */
+.widget-hover-active {
+    background-color: var(--color-neon-pink-hover-fill) !important; /* Use !important to override */
+    border-color: var(--color-neon-pink);
+    box-shadow: 0 0 15px var(--color-neon-pink);
 }
+
 
 /* --- GRID LAYOUTS --- */
 .dashboard-grid, .districts-grid, .intel-grid {
@@ -201,6 +311,11 @@ ul, ol {
 .data-high { color: var(--color-warning); font-weight: bold; }
 .data-low { color: var(--color-neon-green); }
 .data-redacted { color: #555; }
+/* NEW: Success class for unlocked panel */
+.data-success {
+    color: var(--color-neon-green);
+    text-shadow: 0 0 8px var(--color-neon-green);
+}
 
 .widget-feed .scrolling-feed {
     height: 120px;
@@ -210,7 +325,6 @@ ul, ol {
 .widget-feed .scrolling-feed p {
     margin-bottom: 0.5rem;
     font-size: 0.9rem;
-    /* Scrolling animation */
     animation: scroll-feed 5s linear infinite;
 }
 
@@ -234,7 +348,7 @@ ul, ol {
     font-size: 0.9rem;
 }
 
-/* --- SECRET ACCESS PANEL (CSS :target trick)  --- */
+/* --- SECRET ACCESS PANEL (Now JS-controlled) --- */
 .secret-panel {
     display: none; /* Hidden by default */
     position: fixed;
@@ -246,10 +360,7 @@ ul, ol {
     z-index: 9998;
     justify-content: center;
     align-items: center;
-}
-/* This is the magic: Show the panel when its ID is in the URL hash */
-.secret-panel:target {
-    display: flex;
+    animation: page-fade-in 0.3s; /* Uses the simple fade */
 }
 .terminal-window {
     width: 90%;
@@ -263,12 +374,25 @@ ul, ol {
     color: var(--color-critical);
     text-shadow: 0 0 8px var(--color-critical);
 }
+/* NEW: Style for the bypass trigger */
+.secret-trigger {
+    color: var(--color-warning);
+    text-decoration: underline;
+    cursor: pointer;
+    animation: text-flicker 1s infinite;
+}
+.secret-trigger:hover {
+    color: var(--color-neon-pink);
+    text-shadow: 0 0 8px var(--color-neon-pink);
+}
+
 .terminal-close {
     display: inline-block;
     margin-top: 1.5rem;
     padding: 0.5rem 1rem;
     border: 1px solid var(--color-text);
     background: #222;
+    cursor: pointer;
 }
 .terminal-close:hover {
     background: var(--color-text);
