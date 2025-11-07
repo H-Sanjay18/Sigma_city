@@ -1,0 +1,277 @@
+/* --- ROOT VARIABLES (THEME) --- */
+:root {
+    --color-bg: #0a0a0a;
+    --color-text: #00ffc3; /* Cyan */
+    --color-neon-pink: #ff00ff;
+    --color-neon-green: #39ff14;
+    --color-warning: #f7ff00; /* Yellow */
+    --color-critical: #ff0000; /* Red */
+    --color-border: #00ffc3;
+    --font-heading: 'Orbitron', sans-serif;
+    --font-body: 'Share Tech Mono', monospace;
+}
+
+/* --- GLOBAL STYLES --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+/* --- SCANLINE & FLICKER OVERLAY --- */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0) 50%,
+        rgba(0, 0, 0, 0.2) 75%,
+        rgba(0, 0, 0, 0) 100%
+    );
+    background-size: 100% 4px; /* Creates thin horizontal lines */
+    animation: scanline-flicker 0.3s infinite alternate;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.3;
+}
+
+@keyframes scanline-flicker {
+    from { opacity: 0.2; }
+    to { opacity: 0.4; }
+}
+
+/* --- LAYER 1: OFFICIAL SITE (THE GLITCH) --- */
+.official-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #f0f0f0;
+    color: #111;
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    /* Animation plays once, then stays on the 'to' state */
+    animation: glitch-out 2.5s 1s ease-out forwards;
+}
+.official-layer h1 {
+    font-size: 3rem;
+    color: #333;
+}
+.official-layer .loading {
+    font-size: 1.2rem;
+    color: #555;
+    animation: text-flicker 0.5s infinite alternate;
+}
+
+@keyframes glitch-out {
+    0% { opacity: 1; transform: scale(1); }
+    70% { opacity: 1; transform: scale(1.02); }
+    80% { opacity: 0; transform: scale(1.02) skewX(10deg); }
+    90% { opacity: 0; }
+    100% { opacity: 0; display: none; transform: scale(0); }
+}
+
+
+/* --- LAYER 2: SITE WRAPPER (HIDDEN INITIALLY) --- */
+.site-wrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+    /* Fades in after glitch-out */
+    opacity: 0;
+    animation: fade-in 1s 3s forwards;
+}
+
+@keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* --- TYPOGRAPHY & NEON GLOW --- */
+h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+    color: var(--color-neon-pink);
+    text-shadow: 0 0 5px var(--color-neon-pink), 0 0 8px var(--color-neon-pink);
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+}
+h3.section-title {
+    color: var(--color-neon-green);
+    text-shadow: 0 0 5px var(--color-neon-green);
+    border-bottom: 1px solid var(--color-neon-green);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+    animation: text-flicker 3s infinite alternate;
+}
+p { margin-bottom: 1rem; }
+a {
+    color: var(--color-text);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+a:hover {
+    color: var(--color-neon-pink);
+    text-shadow: 0 0 8px var(--color-neon-pink);
+}
+ul, ol {
+    padding-left: 20px;
+}
+
+/* --- HEADER / NAV / STATUS --- */
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid var(--color-border);
+    padding: 0.5rem 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap; /* For smaller screens */
+}
+.logo {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    color: var(--color-neon-green);
+    animation: text-flicker 2s infinite;
+}
+.main-nav a {
+    margin: 0 0.75rem;
+    font-family: var(--font-body);
+    font-size: 1rem;
+}
+.nav-secret {
+    color: var(--color-warning);
+}
+.nav-secret:hover {
+    color: var(--color-critical);
+    text-shadow: 0 0 8px var(--color-critical);
+}
+.status-bar {
+    font-size: 0.9rem;
+}
+.status-warning {
+    color: var(--color-warning);
+    animation: text-flicker 1s infinite alternate;
+}
+
+/* --- WIDGETS (DASHBOARD, DISTRICTS, INTEL) --- */
+.widget-section {
+    margin-bottom: 3rem;
+}
+.widget {
+    border: 1px solid var(--color-border);
+    padding: 1.5rem;
+    background: #000c09; /* Very dark cyan */
+    height: 100%; /* For grid items */
+}
+.widget h4 {
+    color: var(--color-text);
+    text-shadow: none;
+    border-bottom: 1px dashed var(--color-border);
+    padding-bottom: 0.5rem;
+}
+
+/* --- GRID LAYOUTS --- */
+.dashboard-grid, .districts-grid, .intel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+/* --- SPECIFIC WIDGET STYLING --- */
+.data-critical { color: var(--color-critical); font-weight: bold; }
+.data-high { color: var(--color-warning); font-weight: bold; }
+.data-low { color: var(--color-neon-green); }
+.data-redacted { color: #555; }
+
+.widget-feed .scrolling-feed {
+    height: 120px;
+    overflow: hidden;
+    position: relative;
+}
+.widget-feed .scrolling-feed p {
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    /* Scrolling animation */
+    animation: scroll-feed 5s linear infinite;
+}
+
+@keyframes scroll-feed {
+    0% { transform: translateY(0%); }
+    100% { transform: translateY(-100%); }
+}
+
+@keyframes text-flicker {
+    from { opacity: 1; text-shadow: 0 0 5px; }
+    to { opacity: 0.8; text-shadow: 0 0 10px; }
+}
+
+/* --- FOOTER --- */
+.main-footer {
+    border-top: 1px solid var(--color-border);
+    text-align: center;
+    padding: 2rem 1rem 1rem;
+    margin-top: 2rem;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+/* --- SECRET ACCESS PANEL (CSS :target trick)  --- */
+.secret-panel {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 10, 10, 0.95);
+    z-index: 9998;
+    justify-content: center;
+    align-items: center;
+}
+/* This is the magic: Show the panel when its ID is in the URL hash */
+.secret-panel:target {
+    display: flex;
+}
+.terminal-window {
+    width: 90%;
+    max-width: 600px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-critical);
+    padding: 2rem;
+    box-shadow: 0 0 20px var(--color-critical);
+}
+.terminal-window h3 {
+    color: var(--color-critical);
+    text-shadow: 0 0 8px var(--color-critical);
+}
+.terminal-close {
+    display: inline-block;
+    margin-top: 1.5rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--color-text);
+    background: #222;
+}
+.terminal-close:hover {
+    background: var(--color-text);
+    color: var(--color-bg);
+    text-shadow: none;
+}
